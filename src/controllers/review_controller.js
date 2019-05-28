@@ -32,6 +32,20 @@ export const getReviews = (req, res) => {
   if (filters.question && filters.question !== 'All') {
     query.push(`questionNum::"${filters.question}"`);
   }
+  if (filters.sidebar) {
+    if (filters.sidebar.sentiment) {
+      query.push(`enriched_text.sentiment.document.label::"${filters.sidebar.sentiment}"`);
+    }
+    if (filters.sidebar.entity) {
+      query.push(`enriched_text.entities.type::"${filters.sidebar.entity}"`);
+    }
+    if (filters.sidebar.frequency) {
+      query.push(`enriched_text.relations.arguments.entities.text::"${filters.sidebar.frequency}"`);
+    }
+    if (filters.sidebar.amount) {
+      query.push(`enriched_text.relations.arguments.entities.text::"${filters.sidebar.amount}"`);
+    }
+  }
   query = query.join();
   console.log(query);
   const discovery = new DiscoveryV1({
@@ -50,14 +64,6 @@ export const getReviews = (req, res) => {
   discovery.query(queryParams)
     .then((queryResponse) => {
       console.log(`Response: found ${(queryResponse.results || []).length} matching results`);
-      // const documents = queryResponse.results;
-      // // get unique attributes
-      // const questionNums = new Set(documents.map((document) => { return (document.questionNum); }));
-      // const professors = new Set(documents.map((document) => { return (document.professor); }));
-      // const terms = new Set(documents.map((document) => { return (document.term); }));
-      // console.log(professors);
-      // console.log(terms);
-
 
       res.json({ results: queryResponse.results });
       // console.log(JSON.stringify(documents, null, 2));
