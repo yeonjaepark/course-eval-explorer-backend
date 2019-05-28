@@ -48,10 +48,12 @@ export const getReviews = (req, res) => {
     if (filters.sidebar.amount) {
       query.push(`enriched_text.relations.arguments.entities.text::"${filters.sidebar.amount}"`);
     }
+    if (filters.sidebar.keyword) {
+      query.push(`enriched_text.keywords.text::"${filters.sidebar.keyword}"`);
+    }
   }
   query = query.join();
   console.log(`queryString ${query}`);
-
 
   const discovery = new DiscoveryV1({
     version: '2018-12-03',
