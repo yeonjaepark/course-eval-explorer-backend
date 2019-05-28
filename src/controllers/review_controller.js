@@ -64,14 +64,16 @@ export const getReviews = (req, res) => {
     collection_id: 'f4d78f0b-5c97-4b93-b508-dd232ba2fb98',
     query,
     count: 1000,
+    aggregation: 'term(enriched_text.keywords.text, count:10)',
   };
 
   discovery.query(queryParams)
     .then((queryResponse) => {
       console.log(`Response: found ${(queryResponse.results || []).length} matching results`);
-
-      res.json({ results: queryResponse.results });
-      // console.log(JSON.stringify(documents, null, 2));
+      res.json({
+        results: queryResponse.results,
+        keywords: ((queryResponse.aggregations || [])[0] || {}).results,
+      });
     })
     .catch((err) => {
       console.log('error:', err);
