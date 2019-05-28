@@ -32,6 +32,9 @@ export const getReviews = (req, res) => {
   if (filters.question && filters.question !== 'All') {
     query.push(`questionNum::"${filters.question}"`);
   }
+  if (filters.courseNum && filters.courseNum !== 'All') {
+    query.push(`courseNum::"${filters.courseNum}"`);
+  }
   if (filters.sidebar) {
     if (filters.sidebar.sentiment) {
       query.push(`enriched_text.sentiment.document.label::"${filters.sidebar.sentiment}"`);
@@ -47,7 +50,9 @@ export const getReviews = (req, res) => {
     }
   }
   query = query.join();
-  console.log(query);
+  console.log(`queryString ${query}`);
+
+
   const discovery = new DiscoveryV1({
     version: '2018-12-03',
     iam_apikey: 'InDDJQ4BR5ubLys7EHsy0t-E0gT4bxQg6bn1uVSY128V',
